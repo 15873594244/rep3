@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zl.dao.BookDao">
+	<delete id="delBook"  parameterType="int">
+		delete from book where id=#{id}
+	</delete>
+	
+	<select id="queryBookByNameAndMan"  resultType="book">
+		select * from book where bookName=#{bookName} or bookMan=#{bookMan}
+	</select>
+	<update id="updBook" parameterType="book">
+		update book 
+		<trim prefix="set" suffixOverrides=",">
+			
+			<if test="bookName!=null and bookName!=''">
+				bookName=#{bookName},
+			</if>
+			<if test="tId!=null">
+				tId=#{tId},
+			</if>
+			<if test="pressName!=null and pressName!=''">
+				pressName=#{pressName},
+			</if>
+			<if test="stock!=null ">
+				stock=#{stock},
+			</if>
+			<if test="bookMan!=null and pressName!='' ">
+				bookMan=#{bookMan},
+			</if>
+			
+			<if test="pressDate!=null">
+				pressDate=#{pressDate},
+			</if>
+			
+		</trim> 
+		  where id=#{id}
+	</update>
+	
+	<insert id="inBook" parameterType="book">
+		insert into book
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bookName!=null and bookName!=''">
+				bookName,
+			</if>
+			<if test="tId!=null">
+				tId,
+			</if>
+			<if test="pressName!=null and pressName!=''">
+				pressName,
+			</if>
+			<if test="stock!=null ">
+				stock,
+			</if>
+			<if test="bookMan!=null  and pressName!=''">
+				bookMan,
+			</if>
+			
+			<if test="pressDate!=null">
+				pressDate
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bookName!=null and bookName!=''">
+				#{bookName},
+			</if>
+			<if test="tId!=null">
+				#{tId},
+			</if>
+			<if test="pressName!=null and pressName!=''">
+				#{pressName},
+			</if>
+			<if test="stock!=null ">
+				#{stock},
+			</if>
+			<if test="bookMan!=null  and pressName!='' ">
+				#{bookMan},
+			</if>
+			
+			<if test="pressDate!=null">
+				#{pressDate}
+			</if>
+		</trim>
+	</insert>
+	
+	<resultMap type="com.zl.pojo.Book" id="bookAndType">
+		<id column="id" javaType="Integer" property="id"/>
+		<result column="bookName" property="bookName"/>
+		<result column="bookMan" property="bookMan"/>
+		<result column="pressName" property="pressName"/>
+		<result column="pressDate" property="pressDate"/>
+		<result column="stock" property="stock"/>
+		<result column="tId" property="tId"/>
+		<association property="bookType" javaType="bookType" column="tId" select="com.zl.dao.BookTypeDao.queryBookTypeById"></association>
+	</resultMap>
+	
+	<select id="queryBookById" parameterType="int" resultMap="bookAndType">
+		select * from book where id=#{id}
+	</select>
+
+	 <select id="queryBookFyCount" resultType="int" parameterType="query">
+		select count(1) count from book 
+		<where>
+			
+				<if test="bookName!=null and bookName!=''">
+				and bookName like concat('%',concat(#{bookName},'%'))
+					<!-- and ename like '%#{fenYe.query.eName}%' -->
+				</if>
+				<if test="startDate!=null ">
+					and pressDate>=#{startDate}
+				</if>
+				<if test="endDate!=null ">
+					and pressDate&lt;=#{endDate}
+				</if>
+				<if test="tId!=null ">
+					and tId=#{tId}
+				</if>
+			
+		</where>
+	</select> 
+	
+	
+	<select id="queryBookFy" parameterType="fenYe" resultMap="bookAndType">
+		select * from (select e.*, rownum r from (select * from book
+		<where>
+			<if test="query!=null">
+				<if test="query.bookName!=null and query.bookName!=''">
+				and bookName like concat('%',concat(#{query.bookName},'%'))
+					<!-- and ename like '%#{fenYe.query.eName}%' -->
+				</if>
+				<if test="query.startDate!=null ">
+					and pressDate>=#{query.startDate}
+				</if>
+				<if test="query.endDate!=null ">
+					and pressDate&lt;=#{query.endDate}
+				</if>
+				<if test="query.tId!=null ">
+					and tId=#{query.tId}
+				</if>
+			</if>
+		</where>
+			)e) where r>=#{rowStart}  and r&lt;=#{rowEnd}		
+	</select>
+	
+</mapper>

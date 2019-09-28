@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.dao.RoleToPowerDao"  >
+	<!-- 二级缓存 -->
+	<cache></cache>
+	<select id="roleToPower" parameterType="int" resultType="power" >
+		select p.* from roletopower rp, power p where rp.rid=#{id} and rp.pid=p.p_id
+	</select>
+	
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.dao.TuserDao">
+	<resultMap type="user" id="userAndRole">
+		<id property="id" column="id"></id>
+		<result property="username" column="username"/>
+		<result property="pwd" column="pwd"/>
+		<result property="rId" column="r_id"/> 
+		<association property="role" column="id" javaType="role" select="com.zl.dao.RoleDao.queryRoleById"></association>
+	</resultMap>
+	
+	<resultMap type="user" id="userAndRoleAndPower">
+		<id property="id" column="id"></id>
+		<result property="username" column="username"/>
+		<result property="pwd" column="pwd"/>
+		<result property="rId" column="rid"/> 
+		<association property="role" column="rid" javaType="role" select="com.zl.dao.RoleDao.roleAndPower"></association>
+	</resultMap>
+	
+	<select id="logoin" parameterType="user" resultMap="userAndRoleAndPower">
+		select * from t_user where username=#{username} and pwd=#{pwd}
+	</select>
+	<insert id="register" parameterType="user" >
+		insert into t_user(
+			<trim  suffixOverrides=",">
+				<if test="username!=null and username!=''">
+					username,
+				</if>
+				<if test="pwd!=null and pwd!=''">
+					pwd,
+				</if>
+				
+			</trim>
+		) values(
+			<trim suffixOverrides="," >
+				<if test="username!=null and username!=''">
+					#{username},
+				</if>
+				<if test="pwd!=null and pwd!=''">
+					#{pwd},
+				</if>
+			</trim>
+		
+		)
+		
+		
+	</insert>
+	<select id="queryUserByName" parameterType="String" resultType="user"  >
+		select * from t_user where username=#{username}
+	
+	</select>
+	
+	
+	
+	<select id="userAndRole" parameterType="String" resultMap="userAndRole">
+		select * from t_user where username=#{username}
+	</select>
+	
+	<select id="userAndRoleAndPower" parameterType="String" resultMap="userAndRoleAndPower">
+		select * from t_user where username=#{username}
+	</select>
+	
+	
+</mapper>

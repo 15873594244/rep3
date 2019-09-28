@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"></setting>
+		<setting name="cacheEnabled" value="true"></setting>
+	</settings> 
+	
+	<typeAliases>
+		<typeAlias alias="power" type="com.zl.pojo.Power"/>
+		<typeAlias alias="role" type="com.zl.pojo.Role"/>
+		<typeAlias type="com.zl.pojo.Book" alias="book"/>
+		<typeAlias type="com.zl.pojo.BookType" alias="bookType"/>
+		<typeAlias type="com.zl.pojo.FenYe" alias="fenYe"/>
+		<typeAlias type="com.zl.pojo.Query" alias="query"/>
+		<typeAlias type="com.zl.pojo.Tuser" alias="user"/>
+	</typeAliases>
+	
+
+	
+	<mappers >
+		<mapper resource="com/zl/dao/RoleMapper.xml"/>
+		<mapper resource="com/zl/dao/PowerMapper.xml"/>
+		<mapper resource="com/zl/dao/TuserMapper.xml"/>
+		<mapper resource="com/zl/dao/BookMapper.xml"/>
+		<mapper resource="com/zl/dao/BookTypeMapper.xml"/>
+	</mappers>
+	
+</configuration>
